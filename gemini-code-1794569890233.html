@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ایک جگنو اور بچہ کی باتیں - جماعت ششم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-night: #080d1a;
+    --bg-deep: #0f172a;
+    --card-bg: rgba(20, 31, 56, 0.88);
+    --card-border: rgba(250, 204, 21, 0.28);
+    --firefly-gold: #facc15;
+    --firefly-glow: #fef08a;
+    --emerald: #34d399;
+    --sky: #38bdf8;
+    --rose: #fb7185;
+    --text-light: #f8fafc;
+    --text-muted: #cbd5e1;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+    background: radial-gradient(circle at top, #162447 0%, #090d16 65%, #04060b 100%);
+    color: var(--text-light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 2.2;
+    font-size: 1.25rem;
+  }
+
+  /* Animated Fireflies Background */
+  #firefly-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 25px 20px;
+    background: linear-gradient(135deg, rgba(23, 37, 84, 0.9), rgba(15, 23, 42, 0.95));
+    border: 2px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(250, 204, 21, 0.15);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .badge-top {
+    display: inline-block;
+    background: rgba(250, 204, 21, 0.16);
+    color: var(--firefly-gold);
+    border: 1px solid var(--firefly-gold);
+    padding: 2px 18px;
+    border-radius: 50px;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-size: 2.6rem;
+    color: var(--firefly-gold);
+    text-shadow: 0 0 18px rgba(250, 204, 21, 0.55);
+    margin-bottom: 6px;
+  }
+
+  header p.poet {
+    font-size: 1.35rem;
+    color: var(--emerald);
+  }
+
+  .score-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  .score-pill {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    padding: 4px 18px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    color: var(--sky);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 26px;
+  }
+
+  .tab-btn {
+    font-family: inherit;
+    font-size: 1.18rem;
+    background: var(--card-bg);
+    color: var(--text-light);
+    border: 1.5px solid rgba(148, 163, 184, 0.3);
+    padding: 8px 20px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tab-btn:hover {
+    border-color: var(--firefly-gold);
+    transform: translateY(-2px);
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, #facc15, #eab308);
+    color: #0f172a;
+    font-weight: bold;
+    border-color: #fef08a;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+  }
+
+  /* Sections */
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.45s ease;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 22px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  }
+
+  .section-title {
+    font-size: 1.85rem;
+    color: var(--firefly-gold);
+    border-bottom: 2px dashed rgba(250, 204, 21, 0.3);
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Interactive Firefly Catcher Stage */
+  .night-stage {
+    position: relative;
+    height: 280px;
+    background: radial-gradient(ellipse at bottom, #1e293b 0%, #060a14 100%);
+    border-radius: 20px;
+    border: 2px solid #334155;
+    overflow: hidden;
+    margin: 18px 0;
+    cursor: pointer;
+  }
+
+  .moon {
+    position: absolute;
+    top: 22px;
+    left: 35px;
+    width: 65px;
+    height: 65px;
+    background: #fef9c3;
+    border-radius: 50%;
+    box-shadow: 0 0 35px #fef08a, 0 0 70px rgba(250, 204, 21, 0.4);
+  }
+
+  .stage-firefly {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 15%, #facc15 55%, transparent 75%);
+    box-shadow: 0 0 18px #facc15, 0 0 32px #eab308;
+    cursor: pointer;
+    transition: transform 0.2s;
+    animation: floatBug 4s infinite ease-in-out alternate;
+  }
+
+  .stage-firefly:hover {
+    transform: scale(1.4);
+  }
+
+  @keyframes floatBug {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(25px, -18px); }
+    100% { transform: translate(-20px, 15px); }
+  }
+
+  .stage-caption {
+    position: absolute;
+    bottom: 12px;
+    right: 20px;
+    left: 20px;
+    background: rgba(15, 23, 42, 0.85);
+    padding: 8px 16px;
+    border-radius: 12px;
+    text-align: center;
+    color: var(--firefly-glow);
+    font-size: 1.15rem;
+    border: 1px solid rgba(250, 204, 21, 0.35);
+  }
+
+  /* Poem Display */
+  .poem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .couplet-box {
+    background: rgba(15, 23, 42, 0.78);
+    border-right: 5px solid var(--firefly-gold);
+    border-radius: 14px;
+    padding: 14px 18px;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .couplet-box:hover {
+    background: rgba(30, 41, 59, 0.95);
+    transform: scale(1.015);
+  }
+
+  .speaker-tag {
+    display: inline-block;
+    font-size: 0.95rem;
+    padding: 1px 12px;
+    border-radius: 20px;
+    margin-bottom: 4px;
+  }
+
+  .speaker-narrator { background: rgba(56, 189, 248, 0.2); color: #7dd3fc; border: 1px solid #38bdf8; }
+  .speaker-jugnu { background: rgba(250, 204, 21, 0.2); color: #fde047; border: 1px solid #facc15; }
+  .speaker-bacha { background: rgba(251, 113, 133, 0.2); color: #fda4af; border: 1px solid #fb7185; }
+
+  .verse-line {
+    font-size: 1.38rem;
+    color: #fff;
+    text-align: center;
+  }
+
+  /* Vocabulary Flashcards & Matching */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .flip-card {
+    background: transparent;
+    height: 140px;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-front, .flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    border: 1.5px solid var(--card-border);
+  }
+
+  .flip-front {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    color: var(--firefly-gold);
+    font-size: 1.55rem;
+  }
+
+  .flip-front small {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .flip-back {
+    background: linear-gradient(145deg, #065f46, #064e3b);
+    color: #fff;
+    transform: rotateY(180deg);
+    font-size: 1.35rem;
+    border-color: var(--emerald);
+  }
+
+  /* Matching Game */
+  .match-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
+  }
+
+  .match-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .match-item {
+    background: #1e293b;
+    border: 2px solid #475569;
+    padding: 10px 16px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: 0.25s;
+  }
+
+  .match-item.selected {
+    border-color: var(--firefly-gold);
+    background: rgba(250, 204, 21, 0.2);
+  }
+
+  .match-item.matched {
+    border-color: var(--emerald);
+    background: rgba(52, 211, 153, 0.22);
+    color: #a7f3d0;
+    cursor: default;
+  }
+
+  /* Tashreeh Section */
+  .tashreeh-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1.5px solid rgba(56, 189, 248, 0.35);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+
+  .tashreeh-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .status-badge {
+    padding: 3px 14px;
+    border-radius: 20px;
+    font-size: 1rem;
+  }
+
+  .badge-teacher { background: rgba(52, 211, 153, 0.2); color: var(--emerald); border: 1px solid var(--emerald); }
+  .badge-student { background: rgba(250, 204, 21, 0.2); color: var(--firefly-gold); border: 1px solid var(--firefly-gold); }
+
+  .shair-highlight {
+    background: rgba(30, 41, 59, 0.95);
+    padding: 14px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--firefly-glow);
+    margin-bottom: 12px;
+    border-right: 4px solid var(--firefly-gold);
+    border-left: 4px solid var(--firefly-gold);
+  }
+
+  .btn-action {
+    font-family: inherit;
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+    color: #fff;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #facc15, #ca8a04);
+    color: #0f172a;
+    font-weight: bold;
+  }
+
+  .hint-box {
+    display: none;
+    background: rgba(250, 204, 21, 0.12);
+    border: 1px dashed var(--firefly-gold);
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin-top: 10px;
+    color: #fef08a;
+  }
+
+  textarea.student-input, input.student-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 1.2rem;
+    background: rgba(15, 23, 42, 0.9);
+    color: #fff;
+    border: 1.5px solid #475569;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 10px;
+    line-height: 2;
+  }
+
+  textarea.student-input:focus, input.student-input:focus {
+    outline: none;
+    border-color: var(--firefly-gold);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
+  }
+
+  /* Mind Map Graphics */
+  .mindmap-wrapper {
+    background: radial-gradient(circle at center, #1e293b 0%, #090e1a 100%);
+    border-radius: 22px;
+    padding: 25px;
+    border: 2px solid rgba(250, 204, 21, 0.35);
+    position: relative;
+  }
+
+  .mindmap-center {
+    max-width: 340px;
+    margin: 0 auto 28px auto;
+    background: linear-gradient(135deg, #facc15, #eab308);
+    color: #0f172a;
+    padding: 16px 22px;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 1.45rem;
+    font-weight: bold;
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.65);
+    position: relative;
+  }
+
+  .mindmap-nodes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+
+  .mm-node {
+    background: rgba(15, 23, 42, 0.92);
+    border-radius: 18px;
+    padding: 16px;
+    border-top: 5px solid var(--sky);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .mm-node:nth-child(2) { border-top-color: var(--rose); }
+  .mm-node:nth-child(3) { border-top-color: var(--firefly-gold); }
+  .mm-node:nth-child(4) { border-top-color: #a78bfa; }
+  .mm-node:nth-child(5) { border-top-color: var(--emerald); }
+
+  .mm-node:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  .mm-node h4 {
+    font-size: 1.35rem;
+    color: var(--firefly-glow);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mm-detail {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+  }
+
+  /* Quiz Section */
+  .quiz-q {
+    background: rgba(15, 23, 42, 0.85);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid #334155;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .quiz-opt {
+    font-family: inherit;
+    font-size: 1.15rem;
+    background: #1e293b;
+    color: #fff;
+    border: 1.5px solid #475569;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: right;
+    transition: 0.2s;
+  }
+
+  .quiz-opt:hover {
+    border-color: var(--sky);
+  }
+
+  .quiz-opt.correct {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: #10b981;
+    color: #a7f3d0;
+  }
+
+  .quiz-opt.wrong {
+    background: rgba(244, 63, 94, 0.25);
+    border-color: #f43f5e;
+    color: #fecdd3;
+  }
+
+  /* Group Worksheets Tabs */
+  .group-selector {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .group-btn {
+    font-family: inherit;
+    font-size: 1.25rem;
+    padding: 10px 24px;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .g-stars { background: rgba(56, 189, 248, 0.18); color: #7dd3fc; border-color: #38bdf8; }
+  .g-moon { background: rgba(167, 139, 250, 0.18); color: #ddd6fe; border-color: #a78bfa; }
+  .g-sun { background: rgba(250, 204, 21, 0.18); color: #fef08a; border-color: #facc15; }
+
+  .group-btn.active {
+    transform: scale(1.06);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+
+  .g-stars.active { background: #0284c7; color: #fff; }
+  .g-moon.active { background: #7c3aed; color: #fff; }
+  .g-sun.active { background: #eab308; color: #0f172a; }
+
+  .worksheet-panel {
+    display: none;
+    background: rgba(15, 23, 42, 0.92);
+    border: 2px solid rgba(250, 204, 21, 0.35);
+    border-radius: 20px;
+    padding: 26px;
+  }
+
+  .worksheet-panel.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .ws-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    background: rgba(30, 41, 59, 0.7);
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+  }
+
+  .ws-task {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #334155;
+  }
+
+  .ws-task label {
+    display: block;
+    color: var(--firefly-glow);
+    font-size: 1.25rem;
+    margin-bottom: 6px;
+  }
+
+  .download-bar {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .btn-download {
+    font-family: inherit;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transition: 0.3s;
+  }
+
+  .btn-download:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.6);
+  }
+
+  @media (max-width: 768px) {
+    header h1 { font-size: 2rem; }
+    .match-container { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="firefly-canvas"></canvas>
+
+<div class="container">
+  <header>
+    <div class="badge-top">جماعت ششم • اُردو ادب (نظم)</div>
+    <h1>✨ ایک جگنو اور بچہ کی باتیں ✨</h1>
+    <p class="poet">شاعر: مولوی محمد اسمعیل میرٹھی</p>
+    <div class="score-bar">
+      <div class="score-pill">🌟 جگنو پوائنٹس: <strong id="total-points">0</strong></div>
+      <div class="score-pill">🔥 پکڑے گئے جگنو: <strong id="caught-bugs">0</strong> / 5</div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab('tab-intro', this)">🌙 ۱۔ نظم اور مکالمہ</button>
+    <button class="tab-btn" onclick="openTab('tab-vocab', this)">📚 ۲۔ الفاظ و معانی</button>
+    <button class="tab-btn" onclick="openTab('tab-tashreeh', this)">✍️ ۳۔ اشعار کی تشریح</button>
+    <button class="tab-btn" onclick="openTab('tab-mindmap', this)">🧠 ۴۔ مرکزی خیال و ذہنی خاکہ</button>
+    <button class="tab-btn" onclick="openTab('tab-quiz', this)">🎯 ۵۔ ذہنی آزمائش</button>
+    <button class="tab-btn" onclick="openTab('tab-worksheets', this)">📝 ۶۔ گروپ ورک شیٹس</button>
+  </nav>
+
+  <!-- TAB 1: POEM & INTERACTIVE HOOK -->
+  <section id="tab-intro" class="tab-content active">
+    <div class="card">
+      <h2 class="section-title">🌌 برسات کی اندھیری رات کا منظر (دلچسپ سرگرمی)</h2>
+      <p>رات کے اندھیرے میں اُڑتے ہوئے <strong>۵ جگنوؤں</strong> پر کلک کریں اور دیکھیں ہر جگنو کیا پیغام دیتا ہے!</p>
+      
+      <div class="night-stage" id="night-stage">
+        <div class="moon"></div>
+        <div class="stage-firefly" style="top: 60px; right: 15%;" onclick="catchFirefly(this, 'جگنو ۱: برسات کی اندھیری رات میں ہم ہوا میں چنگاریوں کی طرح چمکتے ہیں۔')"></div>
+        <div class="stage-firefly" style="top: 140px; right: 38%;" onclick="catchFirefly(this, 'جگنو ۲: مجھے قید مت کرو! آزاد فضا میں رہنا ہر جاندار کا حق ہے۔')"></div>
+        <div class="stage-firefly" style="top: 80px; right: 62%;" onclick="catchFirefly(this, 'جگنو ۳: میری روشنی میں نہ دھواں ہے، نہ شعلہ اور نہ ہی آگ کی تپش!')"></div>
+        <div class="stage-firefly" style="top: 170px; right: 78%;" onclick="catchFirefly(this, 'جگنو ۴: دن کے اُجالے میں سورج کی روشنی کے سامنے میری چمک چھپ جاتی ہے۔')"></div>
+        <div class="stage-firefly" style="top: 110px; right: 25%;" onclick="catchFirefly(this, 'جگنو ۵: اللہ تعالیٰ نے مجھے اس لیے چمک دی تاکہ انسان قدرت کی کاریگری پر غور کرے!')"></div>
+        <div class="stage-caption" id="stage-caption">چمکتے ہوئے جگنو پر کلک کریں...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">📖 مکمل نظم (کرداروں کے انداز میں پڑھیں)</h2>
+      <p style="margin-bottom: 14px; color: var(--text-muted);">طلبہ جوڑیوں (Pairs) میں ایک طالب علم <strong>”بچہ“</strong> اور دوسرا <strong>”جگنو“</strong> بن کر مکالمہ ادا کرے:</p>
+      
+      <div class="poem-grid">
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-narrator">منظر نگاری (شاعر)</span>
+          <div class="verse-line">سناؤں تمھیں بات اک رات کی</div>
+          <div class="verse-line">کہ وہ رات اندھیری تھی برسات کی</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-narrator">منظر نگاری (شاعر)</span>
+          <div class="verse-line">چمکنے سے جگنو کے تھا اک سماں</div>
+          <div class="verse-line">ہوا میں اُڑیں جیسے چنگاریاں</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-narrator">واقعہ</span>
+          <div class="verse-line">پڑی ایک بچے کی اُن پر نظر</div>
+          <div class="verse-line">پکڑ ہی لیا ایک کو دوڑ کر</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-narrator">واقعہ</span>
+          <div class="verse-line">چمکدار کیڑا جو بھایا اُسے</div>
+          <div class="verse-line">تو ٹوپی میں جھٹ پٹ چھپایا اُسے</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-narrator">واقعہ</span>
+          <div class="verse-line">وہ جھم جھم چمکتا ادھر سے اُدھر</div>
+          <div class="verse-line">پھرا کوئی رستہ نہ پایا مگر</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-jugnu">✨ جگنو کی التجا</span>
+          <div class="verse-line">تو غمگین قیدی نے کی التجا</div>
+          <div class="verse-line">کہ چھوٹے شکاری! مجھے کر رہا</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-jugnu">✨ جگنو کی التجا</span>
+          <div class="verse-line">خدا کے لیے چھوڑ دے چھوڑ دے!</div>
+          <div class="verse-line">مری قید کے جال کو توڑ دے!</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-bacha">👦 بچہ کا جواب</span>
+          <div class="verse-line">کروں گا نہ آزاد اُس وقت تک</div>
+          <div class="verse-line">کہ میں دیکھ لوں دن میں تیری چمک</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-jugnu">✨ جگنو کی وضاحت</span>
+          <div class="verse-line">چمک میری دن میں نہ دیکھو گے تم</div>
+          <div class="verse-line">اُجالے میں ہو جائے گی وہ تو گم</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-bacha">👦 بچہ کی ضد</span>
+          <div class="verse-line">ارے چھوٹے کیڑے نہ دے دم مجھے</div>
+          <div class="verse-line">کہ ہے واقفیت ابھی کم تجھے</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-bacha">👦 بچہ کی ضد</span>
+          <div class="verse-line">اُجالے میں دن کے کھلے گا یہ حال</div>
+          <div class="verse-line">کہ اتنے سے کیڑے میں ہے کیا کمال</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-bacha">👦 بچہ کی ضد</span>
+          <div class="verse-line">دھواں ہے نہ شعلہ نہ گرمی نہ آنچ</div>
+          <div class="verse-line">چمکنے کی تیرے کروں گا میں جانچ</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-jugnu">✨ جگنو کا سبق</span>
+          <div class="verse-line">یہ قدرت کی کاریگری ہے جناب</div>
+          <div class="verse-line">کہ ذرہ کو چمکا دے جوں آفتاب</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-jugnu">✨ جگنو کا سبق</span>
+          <div class="verse-line">مجھے دی ہے اس واسطے یہ چمک</div>
+          <div class="verse-line">کہ تم دیکھ کر مجھ کو جاؤ ٹھٹھک</div>
+        </div>
+
+        <div class="couplet-box">
+          <span class="speaker-tag speaker-jugnu">✨ جگنو کا سبق</span>
+          <div class="verse-line">نہ الہڑ پنے سے کرو پائمال</div>
+          <div class="verse-line">سنبھل کر چلو آدمی کی سی چال!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: VOCABULARY -->
+  <section id="tab-vocab" class="tab-content">
+    <div class="card">
+      <h2 class="section-title">🃏 مشکل الفاظ و معانی (کارڈ پر کلک کر کے معنی دیکھیں)</h2>
+      <div class="vocab-grid" id="vocab-cards"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">🧩 جوڑ ملائیں (الفاظ کو درست معانی سے ملائیں)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 10px;">پہلے دائیں کالم سے لفظ منتخب کریں، پھر بائیں کالم سے اس کا درست معنی چنیں:</p>
+      <div class="match-container">
+        <div class="match-col" id="match-words"></div>
+        <div class="match-col" id="match-meanings"></div>
+      </div>
+      <p id="match-feedback" style="margin-top: 14px; font-weight: bold; color: var(--emerald);"></p>
+    </div>
+  </section>
+
+  <!-- TAB 3: TASHREEH -->
+  <section id="tab-tashreeh" class="tab-content">
+    <div class="card">
+      <h2 class="section-title">✍️ اشعار کی تشریح (سیکھنے اور مشق کرنے کا مرحلہ)</h2>
+      <p style="margin-bottom: 18px; color: var(--text-muted);">پہلے تین اہم اشعار کی مکمل تشریح مثال کے طور پر دی گئی ہے۔ ان کو سمجھنے کے بعد اگلے اشعار کی تشریح طلبہ اشاروں (Hints) کی مدد سے خود مکمل کریں گے۔</p>
+
+      <!-- Guided Example 1 -->
+      <div class="tashreeh-card">
+        <div class="tashreeh-header">
+          <span class="status-badge badge-teacher">🌟 نمونہ تشریح ۱ (سمجھنے کے لیے)</span>
+          <span>حوالہ: نظم ”ایک جگنو اور بچہ کی باتیں“ | شاعر: مولوی محمد اسمعیل میرٹھی</span>
+        </div>
+        <div class="shair-highlight">
+          چمکنے سے جگنو کے تھا اک سماں<br>
+          ہوا میں اُڑیں جیسے چنگاریاں
+        </div>
+        <p><strong>حل لغت:</strong> <u>سماں</u> (منظر، نظارہ)، <u>چنگاریاں</u> (آگ کے اُڑتے ہوئے چھوٹے ذرے)۔</p>
+        <p><strong>تشریح:</strong> شاعر برسات کی ایک اندھیری رات کا خوبصورت منظر بیان کرتے ہوئے کہتے ہیں کہ رات کے گھپ اندھیرے میں جگنوؤں کی چمک دمک سے ایک عجیب دلکش منظر پیدا ہو گیا تھا۔ جب جگنو ہوا میں ادھر اُدھر اُڑ رہے تھے تو یوں محسوس ہوتا تھا جیسے اندھیرے میں آگ کی ننھی چنگاریاں اُڑ رہی ہوں۔</p>
+      </div>
+
+      <!-- Guided Example 2 -->
+      <div class="tashreeh-card">
+        <div class="tashreeh-header">
+          <span class="status-badge badge-teacher">🌟 نمونہ تشریح ۲ (سمجھنے کے لیے)</span>
+          <span>حوالہ: نظم ”ایک جگنو اور بچہ کی باتیں“ | شاعر: مولوی محمد اسمعیل میرٹھی</span>
+        </div>
+        <div class="shair-highlight">
+          دھواں ہے نہ شعلہ نہ گرمی نہ آنچ<br>
+          چمکنے کی تیرے کروں گا میں جانچ
+        </div>
+        <p><strong>حل لغت:</strong> <u>آنچ</u> (آگ کی تپش/گرمی)، <u>جانچ</u> (پرکھ، تحقیق، معائنہ)۔</p>
+        <p><strong>تشریح:</strong> اس شعر میں بچہ جگنو سے اپنی حیرت اور تجسس کا اظہار کرتے ہوئے کہتا ہے کہ اے ننھے کیڑے! عام طور پر روشنی آگ سے پیدا ہوتی ہے جس میں دھواں، شعلہ اور گرمی ہوتی ہے، لیکن تیرے جسم میں تو نہ دھواں ہے، نہ شعلہ اور نہ ہی کوئی تپش ہے، پھر بھی تو چمک رہا ہے۔ میں دن کی روشنی میں تیری اس انوکھی چمک کی حقیقت پرکھنا چاہتا ہوں۔</p>
+      </div>
+
+      <!-- Guided Example 3 -->
+      <div class="tashreeh-card">
+        <div class="tashreeh-header">
+          <span class="status-badge badge-teacher">🌟 نمونہ تشریح ۳ (سمجھنے کے لیے)</span>
+          <span>حوالہ: نظم ”ایک جگنو اور بچہ کی باتیں“ | شاعر: مولوی محمد اسمعیل میرٹھی</span>
+        </div>
+        <div class="shair-highlight">
+          یہ قدرت کی کاریگری ہے جناب<br>
+          کہ ذرہ کو چمکا دے جوں آفتاب
+        </div>
+        <p><strong>حل لغت:</strong> <u>کاریگری</u> (ہنر مندی، تخلیق)، <u>جوں</u> (جیسے، مانند)، <u>آفتاب</u> (سورج)۔</p>
+        <p><strong>تشریح:</strong> جگنو بچے کی کم علمی دور کرتے ہوئے حکمت بھرا جواب دیتا ہے کہ جناب! میری یہ روشنی کسی آگ یا شعلے کا نتیجہ نہیں بلکہ یہ اللہ تعالیٰ کی قدرت کا کمال اور اس کی بہترین کاریگری ہے۔ وہ قادرِ مطلق اتنی طاقت رکھتا ہے کہ ایک معمولی اور ننھے سے ذرے کو بھی سورج کی طرح روشن اور چمکدار بنا دے۔</p>
+      </div>
+
+      <!-- Student Practice 1 -->
+      <div class="tashreeh-card" style="border-color: var(--firefly-gold);">
+        <div class="tashreeh-header">
+          <span class="status-badge badge-student">✍️ طلبہ کی مشق ۱ (خود کریں)</span>
+          <button class="btn-action" onclick="toggleHint('hint1')">💡 اشارے (Hints) دیکھیں</button>
+        </div>
+        <div class="shair-highlight">
+          تو غمگین قیدی نے کی التجا<br>
+          کہ چھوٹے شکاری! مجھے کر رہا
+        </div>
+        <div class="hint-box" id="hint1">
+          <strong>مددگار الفاظ و نکات:</strong> غمگین قیدی (اداس قیدی یعنی جگنو)، التجا (درخواست/فریاد)، رہا (آزاد)۔<br>
+          <strong>نکات:</strong> ٹوپی میں قید ہونے کے بعد جگنو اداس ہو گیا اور اس نے بچے کو ”چھوٹا شکاری“ کہہ کر درخواست کی کہ مجھے قید سے آزاد کر دو۔
+        </div>
+        <textarea class="student-input" rows="3" placeholder="یہاں اس شعر کی تشریح اپنے الفاظ میں تحریر کریں..."></textarea>
+      </div>
+
+      <!-- Student Practice 2 -->
+      <div class="tashreeh-card" style="border-color: var(--firefly-gold);">
+        <div class="tashreeh-header">
+          <span class="status-badge badge-student">✍️ طلبہ کی مشق ۲ (خود کریں)</span>
+          <button class="btn-action" onclick="toggleHint('hint2')">💡 اشارے (Hints) دیکھیں</button>
+        </div>
+        <div class="shair-highlight">
+          نہ الہڑ پنے سے کرو پائمال<br>
+          سنبھل کر چلو آدمی کی سی چال!
+        </div>
+        <div class="hint-box" id="hint2">
+          <strong>مددگار الفاظ و نکات:</strong> الہڑ پنے (نادانی، بچپنے)، پائمال (برباد کرنا، روندنا)، آدمی کی سی چال (سمجھداری اور رحم دلی کا رویہ)۔<br>
+          <strong>نکات:</strong> جگنو بچے کو نصیحت کرتا ہے کہ اپنی نادانی اور شرارت میں مجھے نقصان نہ پہنچاؤ بلکہ انسانوں کی طرح سمجھداری اور رحم دلی سے کام لو۔
+        </div>
+        <textarea class="student-input" rows="3" placeholder="یہاں آخری شعر کی تشریح تحریر کریں..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: CENTRAL IDEA & MIND MAP -->
+  <section id="tab-mindmap" class="tab-content">
+    <div class="card">
+      <h2 class="section-title">💡 نظم کا مرکزی خیال</h2>
+      <div style="background: linear-gradient(135deg, rgba(250, 204, 21, 0.14), rgba(52, 211, 153, 0.14)); border: 2px solid var(--firefly-gold); border-radius: 18px; padding: 20px; font-size: 1.35rem;">
+        اس نظم میں شاعر مولوی محمد اسمعیل میرٹھی یہ پیغام دیتے ہیں کہ <strong>کائنات کی ہر چھوٹی سے چھوٹی مخلوق بھی اللہ تعالیٰ کی قدرت اور کاریگری کا شاہکار ہے۔</strong> انسان کو چاہیے کہ وہ نادانی یا شرارت میں بے زبان جانداروں کو قید کر کے تکلیف نہ دے بلکہ قدرت کی نشانیوں پر غور کرے اور تمام مخلوقات کے ساتھ رحم دلی اور سمجھداری کا برتاؤ کرے۔
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">🧠 خلاصہ نظم — بصری ذہنی خاکہ (Mind Map)</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">ذہنی خاکے کے ہر حصے کو پڑھیں اور نیچے دیے گئے خانے میں ان نکات کی مدد سے مختصر خلاصہ تحریر کریں:</p>
+      
+      <div class="mindmap-wrapper">
+        <div class="mindmap-center">✨ ایک جگنو اور بچہ کی باتیں ✨<br><span style="font-size: 1rem; font-weight: normal;">(خلاصہ کے پانچ بنیادی ستون)</span></div>
+        
+        <div class="mindmap-nodes">
+          <div class="mm-node">
+            <h4>🌧️ ۱۔ برسات کی اندھیری رات</h4>
+            <div class="mm-detail">برسات کی اندھیری رات میں جگنو ہوا میں آگ کی چنگاریوں کی طرح چمکتے ہوئے اُڑ رہے تھے۔</div>
+          </div>
+
+          <div class="mm-node">
+            <h4>🧢 ۲۔ بچے کا جگنو کو پکڑنا</h4>
+            <div class="mm-detail">ایک بچے کو چمکدار جگنو بہت پسند آیا، اس نے دوڑ کر اسے پکڑا اور اپنی ٹوپی میں قید کر لیا۔</div>
+          </div>
+
+          <div class="mm-node">
+            <h4>🥺 ۳۔ قیدی جگنو کی التجا</h4>
+            <div class="mm-detail">ٹوپی میں راستہ نہ پا کر غمگین جگنو نے بچے سے التجا کی کہ خدا کے لیے مجھے آزاد کر دو۔</div>
+          </div>
+
+          <div class="mm-node">
+            <h4>🔍 ۴۔ بچے کا تجسس اور ضد</h4>
+            <div class="mm-detail">بچے نے کہا کہ میں دن کی روشنی میں پرکھوں گا کہ بغیر آگ اور دھوئیں کے تم کیسے چمکتے ہو۔</div>
+          </div>
+
+          <div class="mm-node">
+            <h4>🌟 ۵۔ جگنو کی نصیحت</h4>
+            <div class="mm-detail">جگنو نے سمجھایا کہ یہ قدرت کی کاریگری ہے، نادانی میں مجھے نقصان نہ پہنچاؤ اور رحم دلی دکھاؤ۔</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 22px;">
+        <label style="color: var(--firefly-gold); font-size: 1.3rem;">✍️ ذہنی خاکے کی مدد سے نظم کا خلاصہ یہاں لکھیں:</label>
+        <textarea class="student-input" rows="4" placeholder="اوپر دیے گئے پانچ نکات کو جوڑ کر ایک خوبصورت پیراگراف کی صورت میں خلاصہ لکھیں..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: INTERACTIVE QUIZ -->
+  <section id="tab-quiz" class="tab-content">
+    <div class="card">
+      <h2 class="section-title">🎯 ذہنی آزمائش (درست جواب منتخب کریں)</h2>
+      <div id="quiz-container"></div>
+    </div>
+  </section>
+
+  <!-- TAB 6: GROUP WORKSHEETS (EDITABLE & DOWNLOADABLE) -->
+  <section id="tab-worksheets" class="tab-content">
+    <div class="card">
+      <h2 class="section-title">📝 گروپ سرگرمیاں اور قابلِ ترمیم ورک شیٹس</h2>
+      <p style="color: var(--text-muted); margin-bottom: 16px;">اپنے گروپ کا انتخاب کریں، نیچے دیے گئے خانوں میں جوابات تحریر کریں اور مکمل ہونے پر اپنی ورک شیٹ <strong>ڈاؤن لوڈ</strong> کریں:</p>
+
+      <div class="group-selector">
+        <button class="group-btn g-stars active" onclick="switchGroup('stars', this)">⭐ گروپ ستارے</button>
+        <button class="group-btn g-moon" onclick="switchGroup('moon', this)">🌙 گروپ چاند</button>
+        <button class="group-btn g-sun" onclick="switchGroup('sun', this)">☀️ گروپ آفتاب</button>
+      </div>
+
+      <!-- GROUP STARS WORKSHEET -->
+      <div id="ws-stars" class="worksheet-panel active">
+        <h3 style="color: #7dd3fc; font-size: 1.65rem; margin-bottom: 12px;">⭐ ورک شیٹ: گروپ ستارے</h3>
+        <div class="ws-meta">
+          <div><label>طلبہ کے نام:</label><input type="text" class="student-input" id="stars-names" placeholder="اپنے نام لکھیں..."></div>
+          <div><label>تاریخ / سیکشن:</label><input type="text" class="student-input" id="stars-date" placeholder="جماعت ششم..."></div>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۱: درست لفظ چن کر خالی جگہ پُر کریں (چنگاریاں، ٹوپی، قدرت، برسات):</label>
+          <textarea class="student-input" id="stars-q1" rows="4">۱۔ وہ رات اندھیری تھی __________ کی۔
+۲۔ ہوا میں اُڑیں جیسے __________۔
+۳۔ تو __________ میں جھٹ پٹ چھپایا اُسے۔
+۴۔ یہ __________ کی کاریگری ہے جناب۔</textarea>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۲: دیے گئے الفاظ کے معانی لکھیں: (سماں، التجا، آفتاب، پائمال)</label>
+          <textarea class="student-input" id="stars-q2" rows="3" placeholder="یہاں الفاظ کے معانی لکھیں..."></textarea>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۳: مختصر جواب دیں — بچے نے جگنو کو کیوں پکڑا اور کہاں چھپایا؟</label>
+          <textarea class="student-input" id="stars-q3" rows="3" placeholder="اپنا جواب یہاں لکھیں..."></textarea>
+        </div>
+
+        <div class="download-bar">
+          <button class="btn-download" onclick="downloadWorksheet('stars', 'گروپ ستارے')">⬇️ ورک شیٹ ڈاؤن لوڈ کریں (گروپ ستارے)</button>
+        </div>
+      </div>
+
+      <!-- GROUP MOON WORKSHEET -->
+      <div id="ws-moon" class="worksheet-panel">
+        <h3 style="color: #ddd6fe; font-size: 1.65rem; margin-bottom: 12px;">🌙 ورک شیٹ: گروپ چاند</h3>
+        <div class="ws-meta">
+          <div><label>طلبہ کے نام:</label><input type="text" class="student-input" id="moon-names" placeholder="اپنے نام لکھیں..."></div>
+          <div><label>تاریخ / سیکشن:</label><input type="text" class="student-input" id="moon-date" placeholder="جماعت ششم..."></div>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۱: درج ذیل شعر کی تشریح مع حوالہ نظم و شاعر تحریر کریں:</label>
+          <div class="shair-highlight" style="font-size: 1.25rem;">چمک میری دن میں نہ دیکھو گے تم / اُجالے میں ہو جائے گی وہ تو گم</div>
+          <textarea class="student-input" id="moon-q1" rows="4" placeholder="حوالہ اور تشریح یہاں لکھیں..."></textarea>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۲: جگنو کی روشنی عام آگ یا بلب کی روشنی سے کس طرح مختلف ہے؟ نظم کی روشنی میں واضح کریں۔</label>
+          <textarea class="student-input" id="moon-q2" rows="3" placeholder="اپنا تجزیہ تحریر کریں..."></textarea>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۳: اس نظم سے ہمیں جانداروں کے حقوق کے بارے میں کیا سبق ملتا ہے؟</label>
+          <textarea class="student-input" id="moon-q3" rows="3" placeholder="اپنے خیالات لکھیں..."></textarea>
+        </div>
+
+        <div class="download-bar">
+          <button class="btn-download" onclick="downloadWorksheet('moon', 'گروپ چاند')">⬇️ ورک شیٹ ڈاؤن لوڈ کریں (گروپ چاند)</button>
+        </div>
+      </div>
+
+      <!-- GROUP SUN WORKSHEET -->
+      <div id="ws-sun" class="worksheet-panel">
+        <h3 style="color: #fef08a; font-size: 1.65rem; margin-bottom: 12px;">☀️ ورک شیٹ: گروپ آفتاب</h3>
+        <div class="ws-meta">
+          <div><label>طلبہ کے نام:</label><input type="text" class="student-input" id="sun-names" placeholder="اپنے نام لکھیں..."></div>
+          <div><label>تاریخ / سیکشن:</label><input type="text" class="student-input" id="sun-date" placeholder="جماعت ششم..."></div>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۱: تخلیقی تحریر — فرض کریں بچے نے جگنو کی نصیحت سن کر ٹوپی اُٹھا دی۔ جگنو اور بچے کے درمیان الوداعی مکالمہ (کم از کم ۶ جملے) تحریر کریں:</label>
+          <textarea class="student-input" id="sun-q1" rows="5" placeholder="بچہ: ...&#10;جگنو: ..."></textarea>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۲: تنقیدی جائزہ — اگر انسان قدرت کی بنائی ہوئی مخلوقات کو محض اپنے شوق یا تجسس کے لیے قید کرنے لگے تو ماحول پر اس کے کیا اثرات مرتب ہوں گے؟</label>
+          <textarea class="student-input" id="sun-q2" rows="3" placeholder="اپنی رائے دلائل کے ساتھ لکھیں..."></textarea>
+        </div>
+
+        <div class="ws-task">
+          <label>سوال ۳: نظم کا مرکزی خیال اپنے الفاظ میں تحریر کریں اور نظم کے لیے ایک نیا عنوان تجویز کریں:</label>
+          <textarea class="student-input" id="sun-q3" rows="3" placeholder="مرکزی خیال اور نیا عنوان..."></textarea>
+        </div>
+
+        <div class="download-bar">
+          <button class="btn-download" onclick="downloadWorksheet('sun', 'گروپ آفتاب')">⬇️ ورک شیٹ ڈاؤن لوڈ کریں (گروپ آفتاب)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // --- Ambient Firefly Background ---
+  const canvas = document.getElementById('firefly-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  for (let i = 0; i < 40; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2.5 + 1,
+      dx: (Math.random() - 0.5) * 0.7,
+      dy: (Math.random() - 0.5) * 0.7,
+      alpha: Math.random()
+    });
+  }
+
+  function animateFireflies() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+      p.alpha += (Math.random() - 0.5) * 0.05;
+      p.alpha = Math.max(0.15, Math.min(0.95, p.alpha));
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(250, 204, 21, ${p.alpha})`;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#facc15';
+      ctx.fill();
+    });
+    requestAnimationFrame(animateFireflies);
+  }
+  animateFireflies();
+
+  // --- Points System ---
+  let points = 0;
+  let caughtCount = 0;
+  function addPoints(val) {
+    points += val;
+    document.getElementById('total-points').innerText = points;
+  }
+
+  // --- Tab Navigation ---
+  function openTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(sec => sec.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // --- Stage Firefly Catcher ---
+  function catchFirefly(el, msg) {
+    document.getElementById('stage-caption').innerText = msg;
+    if (!el.dataset.caught) {
+      el.dataset.caught = "true";
+      el.style.background = "radial-gradient(circle, #ffffff 15%, #34d399 60%, transparent 80%)";
+      el.style.boxShadow = "0 0 20px #34d399";
+      caughtCount++;
+      document.getElementById('caught-bugs').innerText = caughtCount;
+      addPoints(10);
+    }
+  }
+
+  // --- Vocabulary Flashcards ---
+  const vocabList = [
+    { word: "سماں", meaning: "منظر، نظارہ، کیفیت" },
+    { word: "بھایا", meaning: "پسند آیا، اچھا لگا" },
+    { word: "التجا", meaning: "درخواست، فریاد، گزارش" },
+    { word: "رہا", meaning: "آزاد" },
+    { word: "دم دینا", meaning: "دھوکا دینا، بہلانا" },
+    { word: "واقفیت", meaning: "جان پہچان، علم، معلومات" },
+    { word: "آنچ", meaning: "آگ کی گرمی یا تپش" },
+    { word: "کاریگری", meaning: "ہنر مندی، تخلیق کا کمال" },
+    { word: "جوں", meaning: "جیسے، مانند، کی طرح" },
+    { word: "آفتاب", meaning: "سورج" },
+    { word: "ٹھٹھک جانا", meaning: "حیران ہو کر رک جانا" },
+    { word: "الہڑ پنے", meaning: "نادانی، بچپنے، بے سمجھی" },
+    { word: "پائمال کرنا", meaning: "برباد کرنا، روند ڈالنا" }
+  ];
+
+  const vocabGrid = document.getElementById('vocab-cards');
+  vocabList.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.innerHTML = `
+      <div class="flip-card-inner">
+        <div class="flip-front">${item.word}<small>(معنی دیکھنے کے لیے کلک کریں)</small></div>
+        <div class="flip-back">${item.meaning}</div>
+      </div>
+    `;
+    card.onclick = () => {
+      card.classList.toggle('flipped');
+      if (!card.dataset.viewed) {
+        card.dataset.viewed = "true";
+        addPoints(5);
+      }
+    };
+    vocabGrid.appendChild(card);
+  });
+
+  // --- Matching Game ---
+  const matchPairs = [
+    { id: 1, w: "آفتاب", m: "سورج" },
+    { id: 2, w: "التجا", m: "درخواست / فریاد" },
+    { id: 3, w: "پائمال", m: "برباد / روندنا" },
+    { id: 4, w: "سماں", m: "منظر / نظارہ" },
+    { id: 5, w: "واقفیت", m: "م
